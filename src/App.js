@@ -104,21 +104,33 @@ function App() {
       {page === 2 ? (
         <Row className="w-95" style={{ height: "86vh", margin: "20px" }}>
           <Col
-            xs={5}
             style={{
               height: "86vh",
-              backgroundColor: "#e6d7ff",
-              boxShadow:
-                "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 97, 82, 0.19)",
-              borderRadius: "30px",
+              width: "40%",
             }}
           >
-            <ScatterPlotMatrix />
+            <Row
+              style={{
+                height: "70%",
+                paddingBottom: "10px",
+              }}
+            >
+              <PCABiplot />
+            </Row>
+            <Row
+              style={{
+                height: "30%",
+                paddingTop: "10px",
+              }}
+            >
+              <SumSquaresLoading />
+            </Row>
           </Col>
+
           <Col
-            xs={3}
             style={{
               height: "86vh",
+              width: "20%",
             }}
           >
             <Row
@@ -127,7 +139,7 @@ function App() {
                 padding: "0px 20px 10px 20px",
               }}
             >
-              <ScreePlot />
+              <KMeans />
             </Row>
             <Row
               style={{
@@ -135,31 +147,20 @@ function App() {
                 padding: "10px 20px 0px 20px",
               }}
             >
-              <KMeans />
+              <ScreePlot />
             </Row>
           </Col>
           <Col
-            xs={4}
             style={{
               height: "86vh",
+              width: "40%",
+              backgroundColor: "#e6d7ff",
+              boxShadow:
+                "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 97, 82, 0.19)",
+              borderRadius: "30px",
             }}
           >
-            <Row
-              style={{
-                height: "30%",
-                paddingBottom: "10px",
-              }}
-            >
-              <SumSquaresLoading />
-            </Row>
-            <Row
-              style={{
-                height: "70%",
-                paddingTop: "10px",
-              }}
-            >
-              <PCABiplot />
-            </Row>
+            <ScatterPlotMatrix />
           </Col>
         </Row>
       ) : (

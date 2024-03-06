@@ -58,9 +58,9 @@ function ScatterPlotMatrix({}) {
   useEffect(() => {
     if (data.length === 0) return;
 
-    const margin = { top: 10, right: 55, bottom: 0, left: 20 }; // Adjust the right margin
+    const margin = { top: 10, right: 60, bottom: 0, left: 10 }; // Adjust the right margin
     const width = 700 - margin.left - margin.right;
-    const height = 800 - margin.top - margin.bottom;
+    const height = 700 - margin.top - margin.bottom;
     const size = width / dimensions.length;
 
     const svg = d3
@@ -109,9 +109,11 @@ function ScatterPlotMatrix({}) {
           .attr("class", "border")
           .attr("width", size)
           .attr("height", size)
-          .style("fill", "none")
-          .style("stroke", "black")
-          .style("stroke-width", 2);
+          .attr("rx", 10)
+          .attr("ry", 10)
+          .style("fill", "#F3F8FF")
+          .style("stroke", "#ddd")
+          .style("stroke-width", 1);
 
         // Draw dots for the scatter plot with color based on clusterId
         plotGroup
@@ -147,9 +149,9 @@ function ScatterPlotMatrix({}) {
         height: "100%",
       }}
     >
-      <h2 style={{ textAlign: "center", marginTop: "20px" }}>
+      <h3 style={{ textAlign: "center", marginTop: "20px" }}>
         Scatter Plot Matrix
-      </h2>
+      </h3>
 
       <svg ref={svgRef}></svg>
     </div>
