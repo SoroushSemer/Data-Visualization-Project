@@ -2,10 +2,10 @@ import "../../App.css";
 import Table from "react-bootstrap/Table";
 
 const data = [
-  { name: "x1", value: 0.9929294 },
-  { name: "x2", value: 0.9360511 },
-  { name: "x3", value: 0.9205652 },
-  { name: "x4", value: 0.7805612 },
+  { name: "cpi_country", value: 0.9734373354098129 },
+  { name: "gross_tertiary_education_enrollment", value: 0.9491546333244391 },
+  { name: "total_tax_rate_country", value: 0.9146490668225984 },
+  { name: "age", value: 0.49776393194475954 },
 ];
 
 function SumSquaresLoading() {
@@ -37,13 +37,17 @@ function SumSquaresLoading() {
           <tr>
             <th style={{ width: "100px" }}>Feature</th>
             {data.map((item) => (
-              <td>{item.name}</td>
+              <td style={{ textWrap: "wrap" }}>
+                {item.name.length > 15
+                  ? item.name.slice(0, 18) + "..."
+                  : item.name}
+              </td>
             ))}
           </tr>
           <tr>
             <th>Sum of Squares Loading</th>
             {data.map((item) => (
-              <td>{item.value}</td>
+              <td>{item.value.toFixed(5)}</td>
             ))}
           </tr>
         </tbody>

@@ -4,16 +4,16 @@ import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
 const data = [
-  { name: 1, value: 5000 },
-  { name: 2, value: 2500 },
-  { name: 3, value: 1250 },
-  { name: 4, value: 625 },
-  { name: 5, value: 600 },
-  { name: 6, value: 500 },
-  { name: 7, value: 400 },
-  { name: 8, value: 300 },
-  { name: 9, value: 200 },
-  { name: 10, value: 100 },
+  { name: 1, value: 4845653.728431435 },
+  { name: 2, value: 3160044.8903641594 },
+  { name: 3, value: 2431542.199690805 },
+  { name: 4, value: 2074681.0516268283 },
+  { name: 5, value: 1850804.3616876488 },
+  { name: 6, value: 1638208.4392672793 },
+  { name: 7, value: 1469420.4562386281 },
+  { name: 8, value: 1468186.7782083116 },
+  { name: 9, value: 1315687.969187062 },
+  { name: 10, value: 1350537.4477076337 },
 ];
 
 function ScreePlot() {
@@ -46,7 +46,28 @@ function ScreePlot() {
       .domain(data.map((d) => d.name))
       .padding(0.1);
 
-    const yScale = d3.scaleLinear().domain([0, 10000]).range([height, 0]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, (d) => d.value)])
+      .range([height, 0]);
+
+    chart
+      .append("line")
+      .attr("x1", xScale(3) + xScale.bandwidth() / 2)
+      .attr("y1", 15)
+      .attr("x2", xScale(3) + xScale.bandwidth() / 2)
+      .attr("y2", height)
+      .attr("stroke", "red")
+      .attr("stroke-dasharray", "5")
+      .attr("stroke-width", 2);
+
+    chart
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("x", xScale(3) + xScale.bandwidth() / 2)
+      .attr("y", 10)
+      .attr("fill", "red")
+      .text("Elbow");
 
     chart
       .selectAll(".bar")
@@ -58,14 +79,21 @@ function ScreePlot() {
       .attr("y", (d) => yScale(d.value))
       .attr("width", xScale.bandwidth())
       .attr("height", (d) => height - yScale(d.value))
-      .attr("fill", (d) => (d.name == selectedBar ? "red" : "#31708E"))
+      .attr("fill", (d) => (d.name === selectedBar ? "red" : "#31708E"))
       .on("click", (event, d) => setSelectedBar(d.name));
+
     chart
       .append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(xScale));
 
-    chart.append("g").call(d3.axisLeft(yScale));
+    chart
+      .append("g")
+      .call(
+        d3
+          .axisLeft(yScale)
+          .tickFormat((d) => (d !== 0 ? (d / 1000000).toString() + "M" : "0"))
+      );
     // X axis label
     svg
       .append("text")
@@ -81,7 +109,7 @@ function ScreePlot() {
       .attr("transform", "rotate(-90)")
       .attr("y", margin.left - 50)
       .attr("x", -margin.top - height / 2 + 20)
-      .text("Mean Squared Error (MSE)");
+      .text("Inertia");
   });
   return (
     <div
