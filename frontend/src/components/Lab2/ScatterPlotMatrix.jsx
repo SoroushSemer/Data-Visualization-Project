@@ -1,59 +1,19 @@
 import "../../App.css";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
+import { GlobalStoreContext } from "../../store/store.js";
 import * as d3 from "d3";
-
-const data = [
-  { x1: 12, x2: 25, x3: 18, x4: 22, clusterId: 0 },
-  { x1: 15, x2: 30, x3: 20, x4: 28, clusterId: 1 },
-  { x1: 28, x2: 22, x3: 10, x4: 35, clusterId: 2 },
-  { x1: 8, x2: 15, x3: 25, x4: 18, clusterId: 0 },
-  { x1: 20, x2: 18, x3: 12, x4: 30, clusterId: 1 },
-  { x1: 30, x2: 24, x3: 14, x4: 25, clusterId: 2 },
-  { x1: 10, x2: 22, x3: 30, x4: 12, clusterId: 0 },
-  { x1: 18, x2: 28, x3: 22, x4: 20, clusterId: 1 },
-  { x1: 26, x2: 32, x3: 18, x4: 30, clusterId: 2 },
-  { x1: 14, x2: 20, x3: 24, x4: 15, clusterId: 0 },
-  { x1: 22, x2: 25, x3: 16, x4: 35, clusterId: 1 },
-  { x1: 32, x2: 30, x3: 20, x4: 28, clusterId: 2 },
-  { x1: 15, x2: 18, x3: 28, x4: 10, clusterId: 0 },
-  { x1: 26, x2: 22, x3: 14, x4: 32, clusterId: 1 },
-  { x1: 35, x2: 28, x3: 18, x4: 24, clusterId: 2 },
-  { x1: 12, x2: 24, x3: 20, x4: 15, clusterId: 0 },
-  { x1: 18, x2: 30, x3: 22, x4: 30, clusterId: 1 },
-  { x1: 28, x2: 34, x3: 16, x4: 25, clusterId: 2 },
-  { x1: 10, x2: 20, x3: 26, x4: 12, clusterId: 0 },
-  { x1: 22, x2: 26, x3: 18, x4: 35, clusterId: 1 },
-  { x1: 32, x2: 28, x3: 24, x4: 28, clusterId: 2 },
-  { x1: 15, x2: 18, x3: 28, x4: 10, clusterId: 0 },
-  { x1: 26, x2: 22, x3: 14, x4: 32, clusterId: 1 },
-  { x1: 35, x2: 30, x3: 20, x4: 24, clusterId: 2 },
-  { x1: 14, x2: 24, x3: 22, x4: 15, clusterId: 0 },
-  { x1: 20, x2: 32, x3: 18, x4: 30, clusterId: 1 },
-  { x1: 30, x2: 28, x3: 16, x4: 28, clusterId: 2 },
-  { x1: 12, x2: 25, x3: 18, x4: 22, clusterId: 0 },
-  { x1: 15, x2: 30, x3: 20, x4: 28, clusterId: 1 },
-  { x1: 28, x2: 22, x3: 10, x4: 35, clusterId: 2 },
-  { x1: 8, x2: 15, x3: 25, x4: 18, clusterId: 0 },
-  { x1: 20, x2: 18, x3: 12, x4: 30, clusterId: 1 },
-  { x1: 30, x2: 24, x3: 14, x4: 25, clusterId: 2 },
-  { x1: 10, x2: 22, x3: 30, x4: 12, clusterId: 0 },
-  { x1: 18, x2: 28, x3: 22, x4: 20, clusterId: 1 },
-  { x1: 26, x2: 32, x3: 18, x4: 30, clusterId: 2 },
-  { x1: 14, x2: 20, x3: 24, x4: 15, clusterId: 0 },
-  { x1: 22, x2: 25, x3: 16, x4: 35, clusterId: 1 },
-  { x1: 32, x2: 30, x3: 20, x4: 28, clusterId: 2 },
-  { x1: 15, x2: 18, x3: 28, x4: 10, clusterId: 0 },
-  { x1: 26, x2: 22, x3: 14, x4: 32, clusterId: 1 },
-  { x1: 35, x2: 28, x3: 18, x4: 24, clusterId: 2 },
-  { x1: 12, x2: 24, x3: 20, x4: 15, clusterId: 0 },
-  { x1: 18, x2: 30, x3: 22, x4: 30, clusterId: 1 },
-  { x1: 28, x2: 34, x3: 16, x4: 25, clusterId: 2 },
-  { x1: 10, x2: 20, x3: 26, x4: 12, clusterId: 0 },
-  { x1: 22, x2: 26, x3: 18, x4: 35, clusterId: 1 },
-];
-const dimensions = ["x1", "x2", "x3", "x4"];
+import { Spinner } from "react-bootstrap";
+// const dimensions = ["x1", "x2", "x3", "x4"];
 function ScatterPlotMatrix({}) {
   const svgRef = useRef();
+
+  const { store, loading } = useContext(GlobalStoreContext);
+
+  let data = store ? store.scatterplot_matrix_data : [];
+  let dimensions =
+    data.length > 0
+      ? Object.keys(data[0]).filter((d) => d !== "clusterId")
+      : [];
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -136,12 +96,12 @@ function ScatterPlotMatrix({}) {
             .attr("dy", "0.35em")
             .style("text-anchor", "middle")
             .style("font-weight", "bold")
-            .text(dim1)
+            .text(dim1.length > 15 ? dim1.substring(0, 15) + "..." : dim1)
             .attr("class", "diagonal-label");
         }
       });
     });
-  }, [data, dimensions]);
+  }, [store]);
   return (
     <div
       style={{
@@ -152,8 +112,20 @@ function ScatterPlotMatrix({}) {
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>
         Scatter Plot Matrix
       </h3>
-
-      <svg ref={svgRef}></svg>
+      {loading ? (
+        <div
+          style={{
+            height: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <svg ref={svgRef}></svg>
+      )}
     </div>
   );
 }

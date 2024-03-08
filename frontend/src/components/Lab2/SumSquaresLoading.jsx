@@ -1,14 +1,19 @@
 import "../../App.css";
 import Table from "react-bootstrap/Table";
-
-const data = [
-  { name: "cpi_country", value: 0.9734373354098129 },
-  { name: "gross_tertiary_education_enrollment", value: 0.9491546333244391 },
-  { name: "total_tax_rate_country", value: 0.9146490668225984 },
-  { name: "age", value: 0.49776393194475954 },
-];
+import { useContext } from "react";
+import { GlobalStoreContext } from "../../store/store.js";
+import { Spinner } from "react-bootstrap";
+// const data = [
+//   { name: "cpi_country", value: 0.9734373354098129 },
+//   { name: "gross_tertiary_education_enrollment", value: 0.9491546333244391 },
+//   { name: "total_tax_rate_country", value: 0.9146490668225984 },
+//   { name: "age", value: 0.49776393194475954 },
+// ];
 
 function SumSquaresLoading() {
+  const { store, loading } = useContext(GlobalStoreContext);
+  let data = store ? store.sum_of_squares_loading : [];
+
   return (
     <div
       style={{
@@ -23,35 +28,48 @@ function SumSquaresLoading() {
       <h3 style={{ textAlign: "center", margin: "20px 0 25px" }}>
         Sum of Squares Loading
       </h3>
-      <Table
-        bordered
-        responsive
-        style={{
-          backgroundColor: "#F3F8FF",
-          maxWidth: "300px !important",
-          marginBottom: "0 ",
-          borderRadius: "25px",
-        }}
-      >
-        <tbody>
-          <tr>
-            <th style={{ width: "100px" }}>Feature</th>
-            {data.map((item) => (
-              <td style={{ textWrap: "wrap" }}>
-                {item.name.length > 15
-                  ? item.name.slice(0, 18) + "..."
-                  : item.name}
-              </td>
-            ))}
-          </tr>
-          <tr>
-            <th>Sum of Squares Loading</th>
-            {data.map((item) => (
-              <td>{item.value.toFixed(5)}</td>
-            ))}
-          </tr>
-        </tbody>
-      </Table>
+      {loading ? (
+        <div
+          style={{
+            height: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <Table
+          bordered
+          responsive
+          style={{
+            backgroundColor: "#F3F8FF",
+            maxWidth: "300px !important",
+            marginBottom: "0 ",
+            borderRadius: "25px",
+          }}
+        >
+          <tbody>
+            <tr>
+              <th style={{ width: "100px" }}>Feature</th>
+              {data.map((item) => (
+                <td style={{ textWrap: "wrap" }}>
+                  {item.name.length > 15
+                    ? item.name.slice(0, 18) + "..."
+                    : item.name}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <th>Sum of Squares Loading</th>
+              {data.map((item) => (
+                <td>{item.value.toFixed(5)}</td>
+              ))}
+            </tr>
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 }

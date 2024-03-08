@@ -1,69 +1,15 @@
 import "../../App.css";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import * as d3 from "d3";
-
-const data = [
-  { x: 1, y: 2, clusterId: 0 },
-  { x: -2, y: 3, clusterId: 1 },
-  { x: 3, y: -1, clusterId: 0 },
-  { x: -3, y: -2, clusterId: 1 },
-  { x: 2, y: 1, clusterId: 0 },
-  { x: -1, y: -3, clusterId: 1 },
-  { x: 0, y: 0, clusterId: 2 },
-  { x: 1.5, y: -1.5, clusterId: 2 },
-  { x: -2.5, y: 2.5, clusterId: 3 },
-  { x: 3, y: 0, clusterId: 3 },
-  { x: -1, y: 1, clusterId: 0 },
-  { x: 0.5, y: 0.5, clusterId: 2 },
-  { x: -4, y: -3, clusterId: 1 },
-  { x: 2.5, y: -2.5, clusterId: 3 },
-  { x: 1, y: -1, clusterId: 0 },
-  { x: -3.5, y: 3.5, clusterId: 3 },
-  { x: 4, y: 0, clusterId: 3 },
-  { x: -1.5, y: 1.5, clusterId: 2 },
-  { x: 2, y: -3, clusterId: 1 },
-  { x: 0.8, y: 0.2, clusterId: 2 },
-  { x: -2, y: 2, clusterId: 3 },
-  { x: 1, y: 1, clusterId: 0 },
-  { x: -4, y: 1, clusterId: 1 },
-  { x: 3.5, y: -3.5, clusterId: 3 },
-  { x: -1.2, y: 1.8, clusterId: 2 },
-  { x: 0, y: 2.5, clusterId: 0 },
-  { x: -3, y: -1.5, clusterId: 1 },
-  { x: 2.3, y: -2.3, clusterId: 3 },
-  { x: -1.5, y: -1.5, clusterId: 1 },
-  { x: 1.2, y: 0.8, clusterId: 2 },
-  { x: -2.8, y: 2.8, clusterId: 3 },
-  { x: 3.2, y: -3.2, clusterId: 3 },
-  { x: -0.5, y: 2, clusterId: 0 },
-  { x: 1.7, y: -1.7, clusterId: 2 },
-  { x: -2, y: -1, clusterId: 1 },
-  { x: 3.7, y: 0, clusterId: 3 },
-  { x: -0.8, y: 0.8, clusterId: 2 },
-  { x: 2.2, y: -2.2, clusterId: 3 },
-  { x: 1.5, y: 1.5, clusterId: 0 },
-  { x: -3.2, y: -3.2, clusterId: 1 },
-  { x: 0, y: -2, clusterId: 1 },
-  { x: 2.8, y: -2.8, clusterId: 3 },
-  { x: -1.7, y: 1.7, clusterId: 2 },
-  { x: 0.3, y: -0.3, clusterId: 0 },
-  { x: -2.3, y: 2.3, clusterId: 3 },
-  { x: 1.8, y: 0.2, clusterId: 2 },
-  { x: -3.7, y: 3.7, clusterId: 1 },
-  { x: 0.7, y: -0.7, clusterId: 0 },
-];
-
-const vectorData = [
-  { name: "x1", x: 0.5, y: 0.7 },
-  { name: "x2", x: -0.8, y: 0.6 },
-  { name: "x3", x: 0.3, y: -0.9 },
-  { name: "x4", x: 0.6, y: -0.4 },
-  // Add more vectors as needed
-];
+import { GlobalStoreContext } from "../../store/store.js";
+import { Spinner } from "react-bootstrap";
 
 function PCABiplot() {
   const d3Container = useRef(null);
 
+  const { store, loading } = useContext(GlobalStoreContext);
+  let data = store ? store.pca_scatterplot_data : [];
+  let vectorData = store ? store.pca_scatterplot_vectors : [];
   useEffect(() => {
     const svg = d3.select(d3Container.current);
 
@@ -125,6 +71,17 @@ function PCABiplot() {
       .attr("y1", 0)
       .attr("y2", height);
 
+    // Draw data points
+    chart
+      .selectAll(".point")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "point")
+      .attr("cx", (d) => xScale(d.x))
+      .attr("cy", (d) => yScale(d.y))
+      .attr("r", 2)
+      .attr("fill", (d) => colorScale(d.clusterId));
     // Draw vectors with arrows
     chart
       .selectAll(".vector")
@@ -132,6 +89,7 @@ function PCABiplot() {
       .enter()
       .append("line")
       .attr("class", "vector")
+      .attr("stroke-width", 3)
       .attr("x1", xScale(0))
       .attr("y1", yScale(0))
       .attr("x2", (d) => xScale(d.x))
@@ -152,18 +110,6 @@ function PCABiplot() {
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,-5L10,0L0,5");
-
-    // Draw data points
-    chart
-      .selectAll(".point")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("class", "point")
-      .attr("cx", (d) => xScale(d.x))
-      .attr("cy", (d) => yScale(d.y))
-      .attr("r", 3)
-      .attr("fill", (d) => colorScale(d.clusterId));
 
     const xAxis = d3
       .axisBottom(xScale)
@@ -222,8 +168,8 @@ function PCABiplot() {
       .attr("class", "legend-text")
       .attr("x", 20)
       .attr("y", (d, i) => i * 20 + 12)
-      .text((d) => d.name);
-  }, []);
+      .text((d) => (d.name.length > 18 ? d.name.slice(0, 15) + "..." : d.name));
+  }, [store]);
 
   return (
     <div
@@ -237,12 +183,25 @@ function PCABiplot() {
       }}
     >
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>PCA Biplot</h3>
-      <svg
-        className="d3-component"
-        width={600}
-        height={600}
-        ref={d3Container}
-      />
+      {loading ? (
+        <div
+          style={{
+            height: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <svg
+          className="d3-component"
+          width={600}
+          height={600}
+          ref={d3Container}
+        />
+      )}
     </div>
   );
 }

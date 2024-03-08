@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "../../App.css";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import * as d3 from "d3";
-
+import { GlobalStoreContext } from "../../store/store.js";
+import { Spinner } from "react-bootstrap";
 const data = [
   { name: 1, value: 4845653.728431435 },
   { name: 2, value: 3160044.8903641594 },
@@ -18,7 +19,8 @@ const data = [
 
 function ScreePlot() {
   const d3Container = useRef(null);
-  const [selectedBar, setSelectedBar] = useState(3);
+
+  const { store, loading } = useContext(GlobalStoreContext);
 
   useEffect(() => {
     const svg = d3.select(d3Container.current);
@@ -79,8 +81,8 @@ function ScreePlot() {
       .attr("y", (d) => yScale(d.value))
       .attr("width", xScale.bandwidth())
       .attr("height", (d) => height - yScale(d.value))
-      .attr("fill", (d) => (d.name === selectedBar ? "red" : "#31708E"))
-      .on("click", (event, d) => setSelectedBar(d.name));
+      .attr("fill", (d) => (d.name === store.k ? "red" : "#31708E"))
+      .on("click", (event, d) => store.setK(d.name));
 
     chart
       .append("g")
@@ -110,7 +112,7 @@ function ScreePlot() {
       .attr("y", margin.left - 50)
       .attr("x", -margin.top - height / 2 + 20)
       .text("Inertia");
-  });
+  }, [store, loading]);
   return (
     <div
       style={{
@@ -125,12 +127,25 @@ function ScreePlot() {
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>
         K-Means MSE Plot
       </h3>
-      <svg
-        className="d3-component"
-        width={600}
-        height={300}
-        ref={d3Container}
-      />
+      {loading ? (
+        <div
+          style={{
+            height: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <svg
+          className="d3-component"
+          width={600}
+          height={300}
+          ref={d3Container}
+        />
+      )}
     </div>
   );
 }

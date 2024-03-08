@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col } from "react-bootstrap";
 import Papa from "papaparse"; // Make sure to install papaparse using npm or yarn
 import LeftPanel from "./components/LeftPanel";
@@ -11,9 +11,13 @@ import KMeans from "./components/Lab2/KMeans";
 import SumSquaresLoading from "./components/Lab2/SumSquaresLoading";
 import ScreePlot from "./components/Lab2/ScreePlot";
 
+import { GlobalStoreContext, GlobalStoreContextProvider } from "./store/store";
+
 function App() {
   const [csvData, setCsvData] = useState(null);
   const [page, setPage] = useState(2);
+
+  // const { store } = useContext(GlobalStoreContext);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,13 +27,15 @@ function App() {
           header: true,
           complete: (result) => {
             // Do something with the parsed CSV data
-            console.log(result.data);
+            // console.log(result.data);
             setCsvData(result.data);
           },
         });
       } catch (error) {
         console.error("Error fetching CSV data:", error);
       }
+
+      // if (store) store.updateData();
     };
 
     fetchData();
@@ -40,132 +46,134 @@ function App() {
       className="App"
       style={{ backgroundColor: page === 1 ? "#fdfffd" : "white" }}
     >
-      <header
-        className="navs px-3 py-1 pt-2 w-100"
-        style={{ backgroundColor: page === 1 ? "#317873" : "#9d47ba" }}
-      >
-        <h3
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+      <GlobalStoreContextProvider>
+        <header
+          className="navs px-3 py-1 pt-2 w-100"
+          style={{ backgroundColor: page === 1 ? "#317873" : "#9d47ba" }}
         >
-          <div>
-            <img
-              src="logo.jpg"
-              height="60vh"
-              style={{ borderRadius: "50%", cursor: "pointer" }}
-              onClick={() => window.location.reload(false)}
-              alt="Data Visualization Logo"
-            />
-            <span className="mx-3 inline text-white">
-              CSE 564 Data Visualization Dashboard - Billionares Data
-            </span>
-          </div>
-          <div
-            style={{ display: "flex", alignItems: "center", color: "white" }}
-          >
-            <span
-              className="mx-3"
-              onClick={() => setPage(1)}
-              style={{
-                cursor: "pointer",
-                textDecoration: "none",
-                fontSize: "24px",
-                color: page === 1 ? "turquoise" : "white",
-              }}
-            >
-              Lab 1
-            </span>
-            <span
-              className="mx-3"
-              onClick={() => setPage(2)}
-              style={{
-                cursor: "pointer",
-                textDecoration: "none",
-                fontSize: "24px",
-                color: page === 2 ? "#e6d7ff" : "white",
-              }}
-            >
-              Lab 2
-            </span>
-          </div>
-        </h3>
-      </header>
-      {page === 1 ? (
-        <Row className="w-100" style={{ height: "86vh", paddingLeft: "1vw" }}>
-          <LeftPanel data={csvData} />
-          <RightPanel data={csvData} />
-        </Row>
-      ) : (
-        <div />
-      )}
-      {page === 2 ? (
-        <Row className="w-95" style={{ height: "86vh", margin: "20px" }}>
-          <Col
+          <h3
             style={{
-              height: "86vh",
-              width: "40%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Row
+            <div>
+              <img
+                src="logo.jpg"
+                height="60vh"
+                style={{ borderRadius: "50%", cursor: "pointer" }}
+                onClick={() => window.location.reload(false)}
+                alt="Data Visualization Logo"
+              />
+              <span className="mx-3 inline text-white">
+                CSE 564 Data Visualization Dashboard - Billionares Data
+              </span>
+            </div>
+            <div
+              style={{ display: "flex", alignItems: "center", color: "white" }}
+            >
+              <span
+                className="mx-3"
+                onClick={() => setPage(1)}
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  fontSize: "24px",
+                  color: page === 1 ? "turquoise" : "white",
+                }}
+              >
+                Lab 1
+              </span>
+              <span
+                className="mx-3"
+                onClick={() => setPage(2)}
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  fontSize: "24px",
+                  color: page === 2 ? "#e6d7ff" : "white",
+                }}
+              >
+                Lab 2
+              </span>
+            </div>
+          </h3>
+        </header>
+        {page === 1 ? (
+          <Row className="w-100" style={{ height: "86vh", paddingLeft: "1vw" }}>
+            <LeftPanel data={csvData} />
+            <RightPanel data={csvData} />
+          </Row>
+        ) : (
+          <div />
+        )}
+        {page === 2 ? (
+          <Row className="w-95" style={{ height: "86vh", margin: "20px" }}>
+            <Col
               style={{
-                height: "70%",
-                paddingBottom: "10px",
+                height: "86vh",
+                width: "40%",
               }}
             >
-              <PCABiplot />
-            </Row>
-            <Row
-              style={{
-                height: "30%",
-                paddingTop: "10px",
-              }}
-            >
-              <SumSquaresLoading />
-            </Row>
-          </Col>
+              <Row
+                style={{
+                  height: "70%",
+                  paddingBottom: "10px",
+                }}
+              >
+                <PCABiplot />
+              </Row>
+              <Row
+                style={{
+                  height: "30%",
+                  paddingTop: "10px",
+                }}
+              >
+                <SumSquaresLoading />
+              </Row>
+            </Col>
 
-          <Col
-            style={{
-              height: "86vh",
-              width: "20%",
-            }}
-          >
-            <Row
+            <Col
               style={{
-                height: "50%",
-                padding: "0px 20px 10px 20px",
+                height: "86vh",
+                width: "20%",
               }}
             >
-              <KMeans />
-            </Row>
-            <Row
+              <Row
+                style={{
+                  height: "50%",
+                  padding: "0px 20px 10px 20px",
+                }}
+              >
+                <KMeans />
+              </Row>
+              <Row
+                style={{
+                  height: "50%",
+                  padding: "10px 20px 0px 20px",
+                }}
+              >
+                <ScreePlot />
+              </Row>
+            </Col>
+            <Col
               style={{
-                height: "50%",
-                padding: "10px 20px 0px 20px",
+                height: "86vh",
+                width: "40%",
+                backgroundColor: "#e6d7ff",
+                boxShadow:
+                  "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 97, 82, 0.19)",
+                borderRadius: "30px",
               }}
             >
-              <ScreePlot />
-            </Row>
-          </Col>
-          <Col
-            style={{
-              height: "86vh",
-              width: "40%",
-              backgroundColor: "#e6d7ff",
-              boxShadow:
-                "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 97, 82, 0.19)",
-              borderRadius: "30px",
-            }}
-          >
-            <ScatterPlotMatrix />
-          </Col>
-        </Row>
-      ) : (
-        <div />
-      )}
+              <ScatterPlotMatrix />
+            </Col>
+          </Row>
+        ) : (
+          <div />
+        )}
+      </GlobalStoreContextProvider>
     </div>
   );
 }

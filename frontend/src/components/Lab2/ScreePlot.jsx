@@ -1,6 +1,8 @@
 import "../../App.css";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import * as d3 from "d3";
+import { GlobalStoreContext } from "../../store/store.js";
+import { Spinner } from "react-bootstrap";
 
 const data = [
   { name: "1", value: 0.46241026396558643 },
@@ -24,8 +26,9 @@ const data = [
 ];
 
 function ScreePlot() {
-  const [selectedBar, setSelectedBar] = useState("4");
   const d3Container = useRef(null);
+
+  const { store, loading } = useContext(GlobalStoreContext);
 
   useEffect(() => {
     const svg = d3.select(d3Container.current);
@@ -69,10 +72,8 @@ function ScreePlot() {
       .attr("y", (d) => yScale(d.value))
       .attr("width", xScale.bandwidth())
       .attr("height", (d) => height - yScale(d.value))
-      .attr("fill", (d) => (d.name == selectedBar ? "red" : "#31708E"))
-      .on("click", (event, d) =>
-        d.name !== "1" ? setSelectedBar(d.name) : null
-      );
+      .attr("fill", (d) => (d.name == store.di ? "red" : "#31708E"))
+      .on("click", (event, d) => (d.name !== "1" ? store.setDi(d.name) : null));
 
     chart
       .append("path")
@@ -110,7 +111,7 @@ function ScreePlot() {
       .attr("y", margin.left - 40)
       .attr("x", -margin.top - height / 2 + 20)
       .text("% of Explained Variance");
-  });
+  }, [store]);
   return (
     <div
       style={{
@@ -123,12 +124,25 @@ function ScreePlot() {
       }}
     >
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>PCA Scree Plot</h3>
-      <svg
-        className="d3-component"
-        width={600}
-        height={300}
-        ref={d3Container}
-      />
+      {loading ? (
+        <div
+          style={{
+            height: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <svg
+          className="d3-component"
+          width={600}
+          height={300}
+          ref={d3Container}
+        />
+      )}
     </div>
   );
 }
