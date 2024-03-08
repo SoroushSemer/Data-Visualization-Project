@@ -38,8 +38,8 @@ function ScatterPlotMatrix({}) {
       scales[dim] = d3
         .scaleLinear()
         .domain([
-          d3.min(data, (d) => d[dim]) - 3,
-          d3.max(data, (d) => d[dim]) + 3,
+          d3.min(data, (d) => d[dim]) - 0.05 * d3.max(data, (d) => d[dim]),
+          d3.max(data, (d) => d[dim]) + 0.05 * d3.max(data, (d) => d[dim]),
         ])
         .range([0, size]);
     });
@@ -96,7 +96,9 @@ function ScatterPlotMatrix({}) {
             .attr("dy", "0.35em")
             .style("text-anchor", "middle")
             .style("font-weight", "bold")
-            .text(dim1.length > 15 ? dim1.substring(0, 15) + "..." : dim1)
+            // .text(dim1.length > 18 ? dim1.substring(0, 15) + "..." : dim1)
+            .text(dim1.length > 20 ? dim1.substring(0, 17) + "..." : dim1)
+            .style("text-wrap", "wrap")
             .attr("class", "diagonal-label");
         }
       });

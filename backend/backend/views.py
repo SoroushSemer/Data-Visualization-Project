@@ -23,8 +23,12 @@ def getLab2Data( k=3, di=4):
     data = data.select_dtypes(include=[np.number])
 
     # data = data[['Severity', 'Distance', 'Temperature', 'Humidity', 'Pressure', 'Visibility', 'WindSpeed', 'Precipitation']]
-    data.drop([ 'latitude_country', 'longitude_country','rank','finalWorth','population_country','gdp_country'], axis=1, inplace=True)
-    data = data.fillna(data.median())
+    data.drop([ 'latitude_country', 'longitude_country','rank','finalWorth','population_country','gdp_country', 'birthYear'], axis=1, inplace=True)
+    data.fillna(method='ffill',inplace=True)
+    data.fillna(method='bfill',inplace=True)
+    data.fillna(0)
+
+
 
     output = {}
 

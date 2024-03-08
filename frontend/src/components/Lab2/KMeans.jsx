@@ -5,16 +5,16 @@ import * as d3 from "d3";
 import { GlobalStoreContext } from "../../store/store.js";
 import { Spinner } from "react-bootstrap";
 const data = [
-  { name: 1, value: 4845653.728431435 },
-  { name: 2, value: 3160044.8903641594 },
-  { name: 3, value: 2431542.199690805 },
-  { name: 4, value: 2074681.0516268283 },
-  { name: 5, value: 1850804.3616876488 },
-  { name: 6, value: 1638208.4392672793 },
-  { name: 7, value: 1469420.4562386281 },
-  { name: 8, value: 1468186.7782083116 },
-  { name: 9, value: 1315687.969187062 },
-  { name: 10, value: 1350537.4477076337 },
+  { name: 1, value: 4435379.51611756 },
+  { name: 2, value: 2595132.725931541 },
+  { name: 3, value: 1819630.123303662 },
+  { name: 4, value: 1569065.5432132147 },
+  { name: 5, value: 1327100.0497825667 },
+  { name: 6, value: 1191278.607347996 },
+  { name: 7, value: 1012104.9797502897 },
+  { name: 8, value: 916392.6815454436 },
+  { name: 9, value: 867720.2650020873 },
+  { name: 10, value: 821130.5328411089 },
 ];
 
 function ScreePlot() {
