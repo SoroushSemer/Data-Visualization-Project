@@ -17,7 +17,7 @@ const data = [
   { name: 10, value: 821130.5328411089 },
 ];
 
-function ScreePlot() {
+function ScreePlot({ bgColor = "#e6d7ff" }) {
   const d3Container = useRef(null);
 
   const { store, loading } = useContext(GlobalStoreContext);
@@ -118,7 +118,7 @@ function ScreePlot() {
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor: "#e6d7ff",
+        backgroundColor: bgColor,
         boxShadow:
           "0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(61, 97, 82, 0.19)",
         borderRadius: "30px",

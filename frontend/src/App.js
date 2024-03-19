@@ -33,7 +33,7 @@ function App() {
       break;
     case 3:
       primaryColor = "#2c3e50";
-      secondaryColor = "#eeefff";
+      secondaryColor = "#ddeeff";
       break;
     default:
       primaryColor = "#000000";
@@ -209,20 +209,26 @@ function App() {
             <Row
               className="w-95"
               style={{
-                height: "30vh",
-                margin: "10px",
+                height: "45vh",
+                margin: "15px 15px 0px 15px",
                 backgroundColor: secondaryColor,
+                borderRadius: "30px",
+                boxShadow:
+                  "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 97, 82, 0.19)",
               }}
             ></Row>
             <Row
               className="w-95"
               style={{
-                height: "57vh",
-                margin: "10px",
-                backgroundColor: secondaryColor,
-                borderRadius: "30px",
+                height: "40vh",
               }}
-            ></Row>
+            >
+              <Col></Col>
+              <Col>
+                <KMeans bgColor={secondaryColor} />
+              </Col>
+              <Col></Col>
+            </Row>
           </div>
         ) : (
           <div />

@@ -14,7 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 def getLab2Data( k=3, di=4):
-    data = pd.read_csv("C:/Users/fahee/Documents/SBU/8-Spring 2024/CSE 564/cse564-project/backend/backend/billionares.csv")
+    data = pd.read_csv("./backend/billionares.csv")
     data['category']=data['category'].astype('category')
     data['industries']=data['industries'].astype('category')
 
