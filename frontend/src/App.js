@@ -15,8 +15,30 @@ import { GlobalStoreContext, GlobalStoreContextProvider } from "./store/store";
 
 function App() {
   const [csvData, setCsvData] = useState(null);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(3);
 
+  const { store, loading } = useContext(GlobalStoreContext);
+
+  var primaryColor = "#317873";
+  var secondaryColor = "#e0ede0";
+
+  switch (page) {
+    case 1:
+      primaryColor = "#317873";
+      secondaryColor = "#e0ede0";
+      break;
+    case 2:
+      primaryColor = "#9d47ba";
+      secondaryColor = "#e6d7ff";
+      break;
+    case 3:
+      primaryColor = "#2c3e50";
+      secondaryColor = "#eeefff";
+      break;
+    default:
+      primaryColor = "#000000";
+      secondaryColor = "#e0ede0";
+  }
   // const { store } = useContext(GlobalStoreContext);
   useEffect(() => {
     const fetchData = async () => {
@@ -42,14 +64,11 @@ function App() {
   }, []);
 
   return (
-    <div
-      className="App"
-      style={{ backgroundColor: page === 1 ? "#fdfffd" : "white" }}
-    >
+    <div className="App" style={{ backgroundColor: "white" }}>
       <GlobalStoreContextProvider>
         <header
           className="navs px-3 py-1 pt-2 w-100"
-          style={{ backgroundColor: page === 1 ? "#317873" : "#9d47ba" }}
+          style={{ backgroundColor: primaryColor }}
         >
           <h3
             style={{
@@ -80,7 +99,7 @@ function App() {
                   cursor: "pointer",
                   textDecoration: "none",
                   fontSize: "24px",
-                  color: page === 1 ? "turquoise" : "white",
+                  color: page === 1 ? secondaryColor : "white",
                 }}
               >
                 Lab 1
@@ -92,10 +111,22 @@ function App() {
                   cursor: "pointer",
                   textDecoration: "none",
                   fontSize: "24px",
-                  color: page === 2 ? "#e6d7ff" : "white",
+                  color: page === 2 ? secondaryColor : "white",
                 }}
               >
-                Lab 2
+                Lab 2a
+              </span>
+              <span
+                className="mx-3"
+                onClick={() => setPage(3)}
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  fontSize: "24px",
+                  color: page === 3 ? secondaryColor : "white",
+                }}
+              >
+                Lab 2b
               </span>
             </div>
           </h3>
@@ -170,6 +201,29 @@ function App() {
               <ScatterPlotMatrix />
             </Col>
           </Row>
+        ) : (
+          <div />
+        )}
+        {page === 3 ? (
+          <div>
+            <Row
+              className="w-95"
+              style={{
+                height: "30vh",
+                margin: "10px",
+                backgroundColor: secondaryColor,
+              }}
+            ></Row>
+            <Row
+              className="w-95"
+              style={{
+                height: "57vh",
+                margin: "10px",
+                backgroundColor: secondaryColor,
+                borderRadius: "30px",
+              }}
+            ></Row>
+          </div>
         ) : (
           <div />
         )}
